@@ -1,4 +1,4 @@
-#SmartContractWallet
+# SmartContractWallet
 
 Using EIP/ERC-4337 Engineering a smart contract wallet through account abstraction such that to eliminate the use of EOA (externally owned accounts like metamask etc...)
 
