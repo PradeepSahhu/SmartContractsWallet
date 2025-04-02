@@ -1,37 +1,30 @@
 import { ethers } from "ethers";
-import Web3Modal from "web3modal";
-import WalletConnectProvider from "@walletconnect/web3-provider";
 
 async function WalletConnection(contractAddress) {
-  if (typeof window.ethereum === "undefined") {
-    console.log("Please install wallet.");
-    alert("Please install wallet.");
+  if (!window.ethereum) {
+    console.log("Please install a wallet like MetaMask.");
+    alert("Please install a wallet.");
     return;
-  } else {
-    const web3ModalVar = new Web3Modal({
-      cacheProvider: true,
-      providerOptions: {
-        walletconnect: {
-          package: WalletConnectProvider,
-        },
-      },
-    });
+  }
 
-    const instanceVar = await web3ModalVar.connect();
-    const providerVar = new ethers.providers.Web3Provider(instanceVar);
+  try {
+    await window.ethereum.request({ method: "eth_requestAccounts" });
 
-    const abi = process.env.SMARTWALLET_ABI;
+    // Create an ethers provider using the injected provider (MetaMask)
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
 
-    try {
-      const signer = providerVar.getSigner();
-      const smartContract = new ethers.Contract(contractAddress, abi, signer);
+    // Retrieve contract ABI from environment variables
+    const abi = JSON.parse(process.env.SMARTWALLET_ABI); // Ensure ABI is parsed correctly
 
-      const newSmartContract = smartContract.connect(signer);
-      return newSmartContract;
-    } catch (error) {
-      console.log("Their is some error");
-      console.log(error);
-    }
+    console.log("Connecting to contract at:", contractAddress);
+    console.log("Smart Wallet ABI:", abi);
+
+    // Connect to the smart contract
+    const contract = new ethers.Contract(contractAddress, abi, signer);
+    return contract;
+  } catch (error) {
+    console.error("There was an error connecting to the contract:", error);
   }
 }
 

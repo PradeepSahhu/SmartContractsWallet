@@ -1,4 +1,4 @@
-// File: /Users/pradeepsahu/Desktop/SmartContractWallet/smartcontractwallet/app/layout.js
+// File: /Users/pradeepsahu/Desktop/SmartContractsWallet/smartcontractwallet/app/layout.js
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
